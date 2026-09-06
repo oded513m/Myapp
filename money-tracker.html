@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#17221f" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="My app" />
+    <meta name="description" content="Track income, expenses, and your current balance." />
+    <title>Money Tracker | My app</title>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="tracker.css" />
+  </head>
+  <body>
+    <div class="page-shell tracker-shell">
+      <header class="site-header">
+        <a class="brand" href="index.html" aria-label="My app home">
+          <span class="brand-mark" aria-hidden="true">M</span>
+          <span>My app</span>
+        </a>
+        <a class="back-link" href="index.html"><span aria-hidden="true">←</span> Home</a>
+      </header>
+
+      <main class="tracker-main">
+        <section class="tracker-heading" aria-labelledby="tracker-title">
+          <div>
+            <p class="eyebrow">01 / money</p>
+            <h1 id="tracker-title">Money <em>Tracker</em></h1>
+            <p class="tracker-intro">A simple record of what comes in, what goes out, and what stays with you.</p>
+          </div>
+          <div class="tracker-actions">
+            <button class="export-button" type="button" id="export-transactions">↓ Export Word</button>
+            <button class="primary-button" type="button" id="open-entry">+ Add transaction</button>
+          </div>
+        </section>
+
+        <section class="summary-grid" aria-label="Money summary">
+          <article class="summary-card balance-summary">
+            <p class="summary-label">Current balance</p>
+            <p class="summary-value" id="balance">$0.00</p>
+            <p class="summary-detail" id="balance-detail">Add your first transaction</p>
+          </article>
+          <article class="summary-card">
+            <p class="summary-label">Income</p>
+            <p class="summary-value income-text" id="income">$0.00</p>
+            <p class="summary-detail">Total received</p>
+          </article>
+          <article class="summary-card">
+            <p class="summary-label">Expenses</p>
+            <p class="summary-value expense-text" id="expenses">$0.00</p>
+            <p class="summary-detail">Total spent</p>
+          </article>
+        </section>
+
+        <div class="tracker-layout">
+          <section class="transactions-panel" aria-labelledby="income-title">
+            <div class="panel-heading section-heading">
+              <div>
+                <p class="eyebrow">Money in</p>
+                <h2 id="income-title">Income</h2>
+              </div>
+              <span class="section-count" id="income-count">0 entries</span>
+            </div>
+            <div class="transaction-list" id="income-list" aria-live="polite"></div>
+          </section>
+
+          <section class="transactions-panel" aria-labelledby="expense-title">
+            <div class="panel-heading section-heading">
+              <div>
+                <p class="eyebrow">Money out</p>
+                <h2 id="expense-title">Expenses</h2>
+              </div>
+              <span class="section-count" id="expense-count">0 entries</span>
+            </div>
+            <div class="transaction-list" id="expense-list" aria-live="polite"></div>
+          </section>
+
+          <section class="transactions-panel" aria-labelledby="transactions-title">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Everything together</p>
+                <h2 id="transactions-title">Activity</h2>
+              </div>
+              <div class="activity-actions">
+                <label class="filter-wrap" for="transaction-filter">
+                  <span class="sr-only">Filter transactions</span>
+                  <select id="transaction-filter">
+                    <option value="all">All activity</option>
+                    <option value="income">Income</option>
+                    <option value="expense">Expenses</option>
+                  </select>
+                </label>
+              </div>
+            </div>
+            <div class="transaction-list" id="transaction-list" aria-live="polite"></div>
+          </section>
+        </div>
+      </main>
+
+      <footer class="site-footer">
+        <span>Start small. Stay steady.</span>
+        <span>© <span id="year"></span> My app</span>
+      </footer>
+    </div>
+
+    <dialog class="entry-dialog" id="entry-dialog" aria-labelledby="entry-title">
+      <form class="entry-form" id="entry-form">
+        <div class="dialog-heading">
+          <div>
+            <p class="eyebrow">New record</p>
+            <h2 id="entry-title">Add transaction</h2>
+          </div>
+          <button class="close-button" type="button" id="close-entry" aria-label="Close dialog">×</button>
+        </div>
+
+        <fieldset class="type-toggle">
+          <legend>Transaction type</legend>
+          <label><input type="radio" name="type" value="expense" checked /> <span>Expense</span></label>
+          <label><input type="radio" name="type" value="income" /> <span>Income</span></label>
+        </fieldset>
+
+        <div class="form-grid">
+          <label class="field field-wide">
+            <span>Description</span>
+            <input name="description" type="text" placeholder="e.g. Weekly groceries" required maxlength="60" />
+          </label>
+          <label class="field">
+            <span>Amount</span>
+            <input name="amount" type="number" min="0.01" step="0.01" placeholder="0.00" required />
+          </label>
+          <label class="field">
+            <span>Date</span>
+            <input name="date" type="date" required />
+          </label>
+          <label class="field field-wide">
+            <span>Category</span>
+            <select name="category">
+              <option>Food</option>
+              <option>Home</option>
+              <option>Transport</option>
+              <option>Health</option>
+              <option>Shopping</option>
+              <option>Fun</option>
+              <option>Salary</option>
+              <option>Other</option>
+            </select>
+          </label>
+        </div>
+        <button class="primary-button dialog-submit" type="submit">Save transaction</button>
+      </form>
+    </dialog>
+    <script src="money-tracker.js"></script>
+    <script src="pwa.js"></script>
+  </body>
+</html>

@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#17221f" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="My app" />
+    <meta name="description" content="A calm home for your money and daily routine." />
+    <title>My app | Your everyday dashboard</title>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="site-header">
+        <a class="brand" href="index.html" aria-label="My app home">
+          <span class="brand-mark" aria-hidden="true">M</span>
+          <span>My app</span>
+        </a>
+        <div class="header-note">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span>Make room for what matters</span>
+          <button class="install-button" id="install-app" type="button" hidden>Install app</button>
+        </div>
+      </header>
+
+      <main>
+        <section class="intro" aria-labelledby="page-title">
+          <p class="eyebrow">Your everyday dashboard</p>
+          <h1 id="page-title">A little more <em>clarity</em>,<br />every day.</h1>
+        
+        </section>
+
+        <section class="dashboard-grid" aria-label="My app tools">
+          <a class="tool-card budget-card" href="money-tracker.html" data-tool="Money Tracker">
+            <div class="card-topline">
+              <span class="card-icon budget-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+                  <path d="M4 7.5h16v11H4z" />
+                  <path d="M7 7.5V5h10v2.5M16 13h4M17 13a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Z" />
+                </svg>
+              </span>
+              <span class="card-arrow" aria-hidden="true">↗</span>
+            </div>
+            <div class="card-content">
+              <p class="card-kicker">01 / money</p>
+              <h2>Money Tracker</h2>
+              <p>Keep a clear view of what comes in, what goes out, and what is left.</p>
+            </div>
+            <span class="card-link">Open money tracker <span aria-hidden="true">→</span></span>
+          </a>
+
+          <a class="tool-card routine-card" href="routine.html" data-tool="Routine">
+            <div class="card-topline">
+              <span class="card-icon routine-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+                  <circle cx="12" cy="12" r="8.5" />
+                  <path d="M12 7v5l3.5 2" />
+                </svg>
+              </span>
+              <span class="card-arrow" aria-hidden="true">↗</span>
+            </div>
+            <div class="card-content">
+              <p class="card-kicker">02 / rhythm</p>
+              <h2>Routine</h2>
+              <p>Shape your day with small, repeatable actions that move you forward.</p>
+            </div>
+            <span class="card-link">Open routine <span aria-hidden="true">→</span></span>
+          </a>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <span>Start small. Stay steady.</span>
+        <span>© <span id="year"></span> My app</span>
+      </footer>
+    </div>
+    <script src="script.js"></script>
+    <script src="pwa.js"></script>
+  </body>
+</html>

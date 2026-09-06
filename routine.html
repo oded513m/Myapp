@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#17221f" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="My app" />
+    <meta name="description" content="A simple daily routine planner for steady progress." />
+    <title>Routine | My app</title>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="routine.css" />
+  </head>
+  <body>
+    <div class="page-shell routine-shell">
+      <header class="site-header">
+        <a class="brand" href="index.html" aria-label="My app home">
+          <span class="brand-mark" aria-hidden="true">M</span>
+          <span>My app</span>
+        </a>
+        <a class="back-link" href="index.html"><span aria-hidden="true">←</span> Home</a>
+      </header>
+
+      <main class="routine-main">
+        <section class="routine-heading" aria-labelledby="routine-title">
+          <div>
+            <p class="eyebrow" id="today-label">Today</p>
+            <h1 id="routine-title">Today’s <em>routine.</em></h1>
+          </div>
+          <div class="progress-card" aria-live="polite">
+            <div class="progress-ring" id="progress-ring"><span id="progress-percent">0%</span></div>
+            <div>
+              <p class="summary-label">Today’s progress</p>
+              <p class="progress-detail" id="progress-detail">0 of 0 complete</p>
+            </div>
+          </div>
+        </section>
+
+        <div class="reminder-banner" id="reminder-banner" role="status" hidden>
+          <span class="reminder-mark" aria-hidden="true">!</span>
+          <span id="reminder-message"></span>
+          <button class="text-button" type="button" id="enable-notifications">Enable notifications</button>
+        </div>
+
+        <div class="routine-layout">
+          <nav class="routine-nav" aria-label="Routine sections">
+            <button class="nav-item is-active" type="button" data-routine-view="today"><span aria-hidden="true">○</span> Today</button>
+            <button class="nav-item" type="button" data-routine-view="later"><span aria-hidden="true">→</span> Later</button>
+            <button class="nav-item" type="button" data-routine-view="history"><span aria-hidden="true">↺</span> Past days</button>
+          </nav>
+
+          <div class="routine-views">
+            <section class="routine-view is-active" data-routine-panel="today" aria-label="Today's routine">
+              <div class="routine-board">
+                <div class="board-heading">
+                  <div>
+                    <p class="eyebrow">Today</p>
+                    <h2>Routine</h2>
+                  </div>
+                  <button class="text-button" type="button" id="clear-completed">Reset checks</button>
+                </div>
+                <div id="routine-groups"></div>
+
+                <form class="quick-add" id="quick-add">
+                  <label for="new-task">Add task</label>
+                  <div class="quick-add-row">
+                    <input id="new-task" name="task" type="text" placeholder="e.g. Call Mum" maxlength="70" required />
+                    <select id="new-task-period" name="period" aria-label="Choose time of day">
+                      <option value="morning">Morning</option>
+                      <option value="midday">Midday</option>
+                      <option value="evening">Evening</option>
+                    </select>
+                    <button class="primary-button" type="submit">Add</button>
+                  </div>
+                </form>
+              </div>
+            </section>
+
+            <section class="routine-view" data-routine-panel="later" aria-labelledby="later-title" hidden>
+              <div class="side-panel later-panel">
+              <div class="side-heading">
+                <div>
+                  <p class="eyebrow">Not today</p>
+                  <h2 id="later-title">Later</h2>
+                </div>
+                <span class="side-count" id="later-count">0</span>
+              </div>
+              <div id="later-list" class="later-list"></div>
+              <form class="later-form" id="later-form">
+                <label class="sr-only" for="later-task">Add a future activity</label>
+                <input id="later-task" name="task" type="text" placeholder="Add something for later" maxlength="70" required />
+                <label class="sr-only" for="later-date">Date for future activity</label>
+                <input id="later-date" name="date" type="date" required />
+                <button class="text-button" type="submit">Add</button>
+              </form>
+              </div>
+            </section>
+
+            <section class="routine-view" data-routine-panel="history" aria-labelledby="history-title" hidden>
+              <div class="side-panel history-panel">
+                <div class="side-heading">
+                  <div>
+                    <p class="eyebrow">Your record</p>
+                    <h2 id="history-title">Past days</h2>
+                  </div>
+                </div>
+                <div id="history-list" class="history-list"></div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </main>
+
+      <footer class="site-footer">
+        <span>Start small. Stay steady.</span>
+        <span>© <span id="year"></span> My app</span>
+      </footer>
+    </div>
+    <script src="routine.js"></script>
+    <script src="pwa.js"></script>
+  </body>
+</html>

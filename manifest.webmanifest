@@ -1,0 +1,19 @@
+{
+  "name": "My app",
+  "short_name": "My app",
+  "description": "A calm home for your money and daily routine.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5f2eb",
+  "theme_color": "#17221f",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
