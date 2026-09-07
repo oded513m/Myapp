@@ -17,7 +17,12 @@ window.addEventListener("beforeinstallprompt", (event) => {
 
 if (installButton) {
   installButton.addEventListener("click", async () => {
-    if (!deferredInstallPrompt) return;
+    if (!deferredInstallPrompt) {
+      installButton.textContent = "Use browser menu to install";
+      installButton.setAttribute("aria-label", "Use your browser menu to install this app");
+      return;
+    }
+
     deferredInstallPrompt.prompt();
     await deferredInstallPrompt.userChoice;
     deferredInstallPrompt = null;
