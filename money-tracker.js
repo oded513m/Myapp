@@ -1,5 +1,5 @@
 const STORAGE_KEY = "daymark-transactions";
-const currency = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
+const currency = new Intl.NumberFormat("en-RW", { style: "currency", currency: "RWF" });
 const dateFormatter = new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric" });
 
 const entryDialog = document.querySelector("#entry-dialog");
