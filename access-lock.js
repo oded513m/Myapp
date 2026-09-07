@@ -1,7 +1,9 @@
 const ACCESS_NAME_KEY = "myapp-access-admin-name";
 const ACCESS_PASSWORD_KEY = "myapp-access-password";
 const ACCESS_SESSION_KEY = "myapp-access-unlocked";
+const ACCESS_VERSION_KEY = "myapp-access-version";
 const REQUIRED_ADMIN_NAME = "appadmin";
+const DEFAULT_PASSWORD = "admin123";
 
 function normalizeAdminName(value) {
   return String(value || "").trim().toLowerCase();
@@ -20,10 +22,10 @@ function createAccessLock() {
     <form class="access-lock-panel">
       <p class="eyebrow">Private app</p>
       <h1>Unlock My app</h1>
-      <p class="access-lock-message"></p>
+      <p class="access-lock-message">Enter your username and password to continue.</p>
 
       <label class="field">
-        <span>Name</span>
+        <span>Username</span>
         <input name="name" type="text" autocomplete="username" required />
       </label>
 
@@ -37,14 +39,9 @@ function createAccessLock() {
         <input name="newPassword" type="password" autocomplete="new-password" minlength="4" />
       </label>
 
-      <label class="field access-confirm-field" hidden>
-        <span>Confirm password</span>
-        <input name="confirm" type="password" autocomplete="new-password" minlength="4" />
-      </label>
-
       <p class="access-lock-error" role="alert"></p>
       <button class="primary-button" type="submit">Unlock</button>
-      <button class="primary-button secondary-button" type="button" hidden>Change password</button>
+      <button class="primary-button secondary-button" type="button">Change password</button>
     </form>`;
   document.body.append(lock);
   return lock;
@@ -59,48 +56,27 @@ async function startAccessLock() {
   const nameInput = form.elements.name;
   const passwordInput = form.elements.password;
   const newPasswordInput = form.elements.newPassword;
-  const confirmField = lock.querySelector(".access-confirm-field");
   const newField = lock.querySelector(".access-new-field");
-  const confirmInput = form.elements.confirm;
   const error = lock.querySelector(".access-lock-error");
   const actionButton = lock.querySelector(".primary-button");
   const changeButton = lock.querySelector(".secondary-button");
-  const hasPassword = Boolean(localStorage.getItem(ACCESS_PASSWORD_KEY));
   const changeMode = { active: false };
 
   function updateFormMode() {
-    if (!hasPassword) {
-      message.textContent = "Create your admin name and password to protect this app on this device.";
-      confirmField.hidden = false;
-      newField.hidden = true;
-      actionButton.textContent = "Create password";
-      changeButton.hidden = true;
-      nameInput.placeholder = REQUIRED_ADMIN_NAME;
-      passwordInput.autocomplete = "new-password";
-      newPasswordInput.value = "";
-      confirmInput.value = "";
-      return;
-    }
-
     if (changeMode.active) {
-      message.textContent = "Enter your admin name and old password before setting a new password.";
+      message.textContent = "Enter your username, old password, and new password.";
       newField.hidden = false;
-      confirmField.hidden = false;
       actionButton.textContent = "Update password";
       changeButton.textContent = "Cancel";
-      changeButton.hidden = false;
       passwordInput.autocomplete = "current-password";
       newPasswordInput.autocomplete = "new-password";
     } else {
       message.textContent = "Enter your admin name and password to continue.";
       newField.hidden = true;
-      confirmField.hidden = true;
       actionButton.textContent = "Unlock";
       changeButton.textContent = "Change password";
-      changeButton.hidden = false;
       passwordInput.autocomplete = "current-password";
       newPasswordInput.value = "";
-      confirmInput.value = "";
     }
   }
 
@@ -110,7 +86,6 @@ async function startAccessLock() {
     nameInput.value = "";
     passwordInput.value = "";
     newPasswordInput.value = "";
-    confirmInput.value = "";
     updateFormMode();
     nameInput.focus();
   });
@@ -122,31 +97,8 @@ async function startAccessLock() {
     const enteredName = normalizeAdminName(nameInput.value);
     const password = passwordInput.value;
 
-    if (!hasPassword) {
+    if (changeMode.active) {
       if (enteredName !== REQUIRED_ADMIN_NAME) {
-        error.textContent = "Admin name must be appadmin.";
-        nameInput.select();
-        return;
-      }
-
-      if (password.length < 4) {
-        error.textContent = "Password must be at least 4 characters.";
-        passwordInput.select();
-        return;
-      }
-
-      if (password !== confirmInput.value) {
-        error.textContent = "Passwords do not match.";
-        return;
-      }
-
-      localStorage.setItem(ACCESS_NAME_KEY, await hashValue(REQUIRED_ADMIN_NAME));
-      localStorage.setItem(ACCESS_PASSWORD_KEY, await hashValue(password));
-    } else if (changeMode.active) {
-      const storedNameHash = localStorage.getItem(ACCESS_NAME_KEY);
-      const enteredNameHash = await hashValue(enteredName);
-
-      if (enteredName !== REQUIRED_ADMIN_NAME || enteredNameHash !== storedNameHash) {
         error.textContent = "Incorrect admin name.";
         nameInput.select();
         return;
@@ -159,36 +111,20 @@ async function startAccessLock() {
       }
 
       const newPassword = newPasswordInput.value;
-      if (newPassword.length < 4) {
-        error.textContent = "New password must be at least 4 characters.";
+      if (newPassword.length < 1) {
+        error.textContent = "Enter a new password.";
         newPasswordInput.select();
         return;
       }
-
-      if (newPassword !== confirmInput.value) {
-        error.textContent = "New passwords do not match.";
-        return;
-      }
-
-      localStorage.setItem(ACCESS_NAME_KEY, await hashValue(REQUIRED_ADMIN_NAME));
       localStorage.setItem(ACCESS_PASSWORD_KEY, await hashValue(newPassword));
       changeMode.active = false;
       sessionStorage.setItem(ACCESS_SESSION_KEY, "true");
       lock.remove();
       return;
     } else {
-      const storedNameHash = localStorage.getItem(ACCESS_NAME_KEY);
-      const enteredNameHash = await hashValue(enteredName);
-
-      if (enteredNameHash !== storedNameHash || enteredName !== REQUIRED_ADMIN_NAME) {
+      if (enteredName !== REQUIRED_ADMIN_NAME || await hashValue(password) !== localStorage.getItem(ACCESS_PASSWORD_KEY)) {
         error.textContent = "Incorrect admin name or password.";
         nameInput.select();
-        return;
-      }
-
-      if (await hashValue(password) !== localStorage.getItem(ACCESS_PASSWORD_KEY)) {
-        error.textContent = "Incorrect admin name or password.";
-        passwordInput.select();
         return;
       }
     }
@@ -196,6 +132,12 @@ async function startAccessLock() {
     sessionStorage.setItem(ACCESS_SESSION_KEY, "true");
     lock.remove();
   });
+
+  if (localStorage.getItem(ACCESS_VERSION_KEY) !== "2") {
+    localStorage.setItem(ACCESS_NAME_KEY, await hashValue(REQUIRED_ADMIN_NAME));
+    localStorage.setItem(ACCESS_PASSWORD_KEY, await hashValue(DEFAULT_PASSWORD));
+    localStorage.setItem(ACCESS_VERSION_KEY, "2");
+  }
 
   updateFormMode();
   nameInput.focus();
