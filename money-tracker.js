@@ -181,7 +181,7 @@ entryForm.addEventListener("submit", (event) => {
 });
 transactionFilter.addEventListener("change", renderTransactions);
 exportButton.addEventListener("click", exportTransactions);
-transactionList.addEventListener("click", (event) => {
+function deleteTransaction(event) {
   const deleteButton = event.target.closest("[data-id]");
   if (!deleteButton) return;
   const transactionIndex = transactions.findIndex((transaction) => transaction.id === deleteButton.dataset.id);
@@ -190,6 +190,10 @@ transactionList.addEventListener("click", (event) => {
     saveTransactions();
     render();
   }
-});
+}
+
+transactionList.addEventListener("click", deleteTransaction);
+incomeList.addEventListener("click", deleteTransaction);
+expenseList.addEventListener("click", deleteTransaction);
 
 render();

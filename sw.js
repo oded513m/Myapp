@@ -1,4 +1,4 @@
-const CACHE_NAME = "my-app-v2";
+const CACHE_NAME = "my-app-v3";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -8,6 +8,7 @@ const APP_SHELL = [
   "./tracker.css",
   "./routine.css",
   "./script.js",
+  "./access-lock.js",
   "./money-tracker.js",
   "./routine.js",
   "./pwa.js",
