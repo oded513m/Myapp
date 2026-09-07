@@ -8,6 +8,7 @@ const APP_SHELL = [
   "./tracker.css",
   "./routine.css",
   "./script.js",
+  "./access-credentials.js",
   "./access-lock.js",
   "./money-tracker.js",
   "./routine.js",
